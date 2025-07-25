@@ -16,19 +16,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create and activate virtual environment
+      - name: Setup Python virtual environment
         run: |
           python3 -m venv venv
           source venv/bin/activate
-          echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
-
-      - name: Install clingo
-        run: |
-          source venv/bin/activate
           pip install clingo
+          which python
+          echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
 
       - name: Clone Spack v1.0.0
         run: |
+          echo $GITHUB_ENV
           git clone -b v1.0.0 https://github.com/spack/spack.git $GITHUB_WORKSPACE/spack
           source $GITHUB_WORKSPACE/spack/share/spack/setup-env.sh
           echo $SPACK_ROOT >> $GITHUB_ENV
