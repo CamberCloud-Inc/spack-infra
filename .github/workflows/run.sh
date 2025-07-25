@@ -11,7 +11,7 @@ on:
 
 jobs:
   setup-spack-env:
-    runs-on: [self-hosted, dev-camber]
+    runs-on: [dev-camber]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
