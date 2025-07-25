@@ -32,8 +32,9 @@ jobs:
           mkdir -p $SPACK_ROOT/etc/spack
           cp -r settings/* $SPACK_ROOT/etc/spack/
 
-          spack env create myenv spack-configs/apps.yaml
-          spack env activate $GITHUB_WORKSPACE/spack-configs/apps.yaml
+          spack env create apps spack-configs/apps.yaml
+          spack env activate apps
           spack env st
           spack concretize -f
+          spack install
 
