@@ -29,14 +29,15 @@ jobs:
 
       - name: Clone Spack v1.0.0
         run: |
-          git clone -b v1.0.0 https://github.com/spack/spack.git /camber/home/spack/spack
-          source /camber/home/spack/spack/share/spack/setup-env.sh
-          echo "SPACK_ROOT=/camber/home/spack/spack" >> $GITHUB_ENV
+          git clone -b v1.0.0 https://github.com/spack/spack.git $GITHUB_WORKSPACE/spack
+          source $GITHUB_WORKSPACE/spack/share/spack/setup-env.sh
+          echo $SPACK_ROOT >> $GITHUB_ENV
 
       - name: Set SPACK_PYTHON
         run: |
           source venv/bin/activate
-          echo "SPACK_PYTHON=$(which python3)" >> $GITHUB_ENV
+          export SPACK_PYTHON=$(which python3)
+          echo $SPACK_PYTHON >> $GITHUB_ENV
 
       - name: Copy settings directory to SPACK_ROOT/etc/spack
         run: |
@@ -53,6 +54,7 @@ jobs:
         run: |
           source venv/bin/activate
           source $SPACK_ROOT/share/spack/setup-env.sh
-          spack env activate myenv
+          spack env activate $GITHUB_WORKSPACE/spack-configs/apps.yaml
+          spack env st
           spack concretize -f
 
