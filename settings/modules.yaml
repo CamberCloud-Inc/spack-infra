@@ -1,0 +1,20 @@
+modules:
+  default:
+    # Where to install modules
+    enable:
+    - tcl
+    tcl:
+      hash_length: 0
+      hide_implicits: true
+      projections:
+        all: '{name}/{version}-{compiler.name}-{compiler.version}'
+      #exclude:
+      #- glibc
+      all:
+        conflict:
+        - '{name}'
+        environment:
+          set:
+            '{name}_ROOT': '{prefix}'
+        # Automatically load dependencies
+        autoload: direct

@@ -1,0 +1,122 @@
+packages:
+  hwloc:
+    externals:
+    - spec: hwloc@2.4.1
+      prefix: /usr
+  gcc:
+    externals:
+    - spec: gcc@11.5.0 languages='c,c++,fortran'
+      prefix: /usr
+      extra_attributes:
+        compilers:
+          c: /usr/bin/gcc
+          cxx: /usr/bin/g++
+          fortran: /usr/bin/gfortran
+  cmake:
+    externals:
+    - spec: cmake@3.22.2
+      prefix: /usr
+  cuda:
+    externals:
+    - spec: cuda@12.8
+      prefix: /usr/local/cuda-12.8/
+  openssl:
+    externals:
+    - spec: openssl@3.0.8
+      prefix: /usr
+  tar:
+    externals:
+    - spec: tar@1.34
+      prefix: /usr
+  openssh:
+    externals:
+    - spec: openssh@8.7p1
+      prefix: /usr
+  coreutils:
+    externals:
+    - spec: coreutils@8.32
+      prefix: /usr
+  gawk:
+    externals:
+    - spec: gawk@5.1.0
+      prefix: /usr
+  findutils:
+    externals:
+    - spec: findutils@4.8.0
+      prefix: /usr
+  diffutils:
+    externals:
+    - spec: diffutils@3.8
+      prefix: /usr
+  zlib:
+    externals:
+    - spec: zlib@1.2.11
+      prefix: /usr
+  cpio:
+    require:
+    - one_of: [cflags=-std=c18, '%gcc']
+  gromacs:
+    require:
+    - one_of: [+intel_provided_gcc ^intel-oneapi-mkl]
+      when: '%intel'
+  intel-oneapi-compilers:
+    require:
+    - one_of: [intel-oneapi-compilers %gcc target=x86_64_v3]
+  intel-oneapi-mpi:
+    variants: +external-libfabric generic-names=True
+  kripke:
+    require: kripke@develop +openmp %oneapi ^cmake%gcc
+  lammps:
+    require:
+    - one_of: [lammps@develop lammps_sizes=bigbig +molecule +kspace +rigid +asphere
+          +opt +openmp +openmp-package +intel ^intel-oneapi-mkl]
+      when: '%intel'
+  libfabric:
+    buildable: false
+    externals:
+    - prefix: /opt/amazon/efa/
+      spec: libfabric@1.22.0
+    require: ['fabrics=shm,efa']
+ #libunistring:
+ #   require:
+ #   - one_of: [cflags=-std=c18, '%gcc']
+  mpas-model:
+    require:
+    - one_of: [mpas-model precision=single ^parallelio+pnetcdf]
+      when: '%intel'
+ # mpich:
+ #   require:
+ #   - one_of: [mpich pmi=pmi2 device=ch4 netmod=ofi +slurm]
+  openfoam:
+    require:
+    - one_of: [openfoam %gcc ^scotch@6.0.9]
+  openmpi:
+    variants: ~atomics ~cuda ~cxx ~cxx_exceptions ~internal-hwloc ~java +legacylaunchers
+      ~lustre ~memchecker +pmi +romio ~singularity +vt +wrapper-rpath fabrics=ofi
+      schedulers=slurm
+    require: '@4:'
+  palace:
+    require:
+    - one_of: [palace %oneapi ^fmt@9.1.0]
+  pmix:
+    buildable: false
+    externals:
+    - prefix: /opt/pmix
+      spec: pmix@5.0.6
+  py-devito:
+    require:
+    - one_of: [py-devito +mpi]
+      when: '%intel'
+  quantum-espresso:
+    require:
+    - one_of: [quantum-espresso@6.6 ^intel-oneapi-mkl+cluster]
+      when: '%intel'
+  slurm:
+    externals:
+    - prefix: /opt/slurm
+      spec: slurm@24.05.7 +pmix
+    buildable: false
+  wrf:
+    require:
+    - one_of: [wrf@4 build_type=dm+sm]
+      when: '%intel'

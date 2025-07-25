@@ -1,0 +1,10 @@
+spack:
+  view: False
+  # add package specs to the `specs` list
+  specs:
+  - openmpi
+  - hdf5 +mpi +cxx +fortran
+  - osu-micro-benchmarks
+  concretizer:
+    unify: false
+  packages: {}
