@@ -101,8 +101,15 @@ packages:
   pmix:
     buildable: false
     externals:
-    - prefix: /opt/pmix
-      spec: pmix@5.0.6
+    - prefix: /opt/amazon/pmix
+      spec: pmix@4.2.8  
+  #  - prefix: /opt/pmix
+  #    spec: pmix@5.0.6
+  prrte:
+    buildable: false
+    externals:
+    - prefix: /opt/amazon/prrte
+      spec: prrte@3.0.6
   py-devito:
     require:
     - one_of: [py-devito +mpi]

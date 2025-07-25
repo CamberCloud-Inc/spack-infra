@@ -1,0 +1,40 @@
+name: Spack Environment Setup
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  setup-spack-env:
+    runs-on: [dev-camber]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python virtual environment
+        run: |
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install clingo
+          echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+
+      - name: Build Spack Stack
+        run: |
+          git clone -b v1.0.0 https://github.com/spack/spack.git $GITHUB_WORKSPACE/spack
+          source $GITHUB_WORKSPACE/spack/share/spack/setup-env.sh
+          export SPACK_PYTHON=$(which python3)
+
+          mkdir -p $SPACK_ROOT/etc/spack
+          cp -r settings/* $SPACK_ROOT/etc/spack/
+
+          spack env create apps spack-configs/apps.yaml
+          spack env activate apps
+          spack env st
+          spack concretize -f
+          spack install
+
