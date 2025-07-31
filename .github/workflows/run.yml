@@ -24,6 +24,8 @@ jobs:
           echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
 
       - name: Build Spack Stack
+        env:
+          MY_OCI_TOKEN: ${{ secrets.MY_OCI_TOKEN }}
         run: |
           git clone -b v1.0.0 https://github.com/spack/spack.git $GITHUB_WORKSPACE/spack
           source $GITHUB_WORKSPACE/spack/share/spack/setup-env.sh
