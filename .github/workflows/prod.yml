@@ -1,12 +1,6 @@
 name: Production Spack Deployment
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -44,3 +38,4 @@ jobs:
           spack env st
           spack concretize -f
           spack install
+          spack module tcl refresh

@@ -1,8 +1,6 @@
 spack:
   view: False
   # add package specs to the `specs` list
-  config:
-    install_tree: /camber/home/tools/spack-deployments/v1.0.0
   specs:
   - openmpi
   - hdf5 +mpi +cxx +fortran
