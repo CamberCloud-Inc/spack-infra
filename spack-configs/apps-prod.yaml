@@ -1,0 +1,20 @@
+spack:
+  view: False
+  # add package specs to the `specs` list
+  config:
+    install_tree: /camber/home/tools/spack-deployments/v1.0.0
+  specs:
+  - openmpi
+  - hdf5 +mpi +cxx +fortran
+  - osu-micro-benchmarks
+  concretizer:
+    unify: false
+  mirrors:
+     ghcr-oci-buildcache:
+        url: oci://ghcr.io/shahzebsiddiqui/buildcache-shahzeb-camber
+        access_pair:
+           id: shahzebsiddiqui
+           secret_variable: MY_OCI_TOKEN
+        signed: false
+        autopush: false
+  packages: {}

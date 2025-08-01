@@ -1,0 +1,46 @@
+name: Production Spack Deployment
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  setup-spack-env:
+    runs-on: [dev-camber]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python virtual environment
+        run: |
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install clingo
+          echo "VIRTUAL_ENV=$VIRTUAL_ENV" >> $GITHUB_ENV
+
+      - name: Build Spack Stack
+        env:
+          MY_OCI_TOKEN: ${{ secrets.MY_OCI_TOKEN }}
+        run: |
+          deployment_path=/camber/home/tools/spack-deployments/v1.0.0
+          mkdir -p $deployment_path
+          SPACK_DIR="spack_$(date +%Y%m%d_%H%M%S)"
+          cd $deployment_path
+          git clone -b v1.0.0 https://github.com/spack/spack.git $SPACK_DIR
+          source $SPACK_DIR/share/spack/setup-env.sh
+          export SPACK_PYTHON=$(which python3)
+          echo $MY_OCI_TOKEN
+          mkdir -p $SPACK_ROOT/etc/spack
+          cd $GITHUB_WORKSPACE
+          cp -r settings/* $SPACK_ROOT/etc/spack/
+
+          spack env create apps spack-configs/apps-prod.yaml
+          spack env activate apps
+          spack env st
+          spack concretize -f
+          spack install
