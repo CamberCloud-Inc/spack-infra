@@ -1,12 +1,6 @@
-name: Spack Environment Setup
+name: Production Spack Deployment
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -27,16 +21,21 @@ jobs:
         env:
           MY_OCI_TOKEN: ${{ secrets.MY_OCI_TOKEN }}
         run: |
-          git clone -b v1.0.0 https://github.com/spack/spack.git $GITHUB_WORKSPACE/spack
-          source $GITHUB_WORKSPACE/spack/share/spack/setup-env.sh
+          deployment_path=/camber/home/tools/spack-deployments/v1.0.0
+          mkdir -p $deployment_path
+          SPACK_DIR="spack_$(date +%Y%m%d_%H%M%S)"
+          cd $deployment_path
+          git clone -b v1.0.0 https://github.com/spack/spack.git $SPACK_DIR
+          source $SPACK_DIR/share/spack/setup-env.sh
           export SPACK_PYTHON=$(which python3)
           echo $MY_OCI_TOKEN
           mkdir -p $SPACK_ROOT/etc/spack
+          cd $GITHUB_WORKSPACE
           cp -r settings/* $SPACK_ROOT/etc/spack/
 
-          spack env create apps spack-configs/apps.yaml
+          spack env create apps spack-configs/apps-prod.yaml
           spack env activate apps
           spack env st
           spack concretize -f
           spack install
-
+          spack module tcl refresh

@@ -1,9 +1,6 @@
 spack:
   view: False
   # add package specs to the `specs` list
-  config:
-    install_tree:
-      padded_length: 128
   specs:
   - openmpi
   - hdf5 +mpi +cxx +fortran
@@ -17,5 +14,5 @@ spack:
            id: shahzebsiddiqui
            secret_variable: MY_OCI_TOKEN
         signed: false
-        autopush: true
+        autopush: false
   packages: {}
