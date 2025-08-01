@@ -11,7 +11,7 @@ spack:
   concretizer:
     unify: false
   mirrors:
-     my-mirror:
+     ghcr-oci-buildcache:
         url: oci://ghcr.io/shahzebsiddiqui/buildcache-shahzeb-camber
         access_pair:
            id: shahzebsiddiqui
